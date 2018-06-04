@@ -1,54 +1,78 @@
 import React from 'react'
-import { Table, Input, Icon, Button, Popconfirm } from 'antd';
+import { 
+  Table, Input, Select, 
+  Popconfirm, Form, Row, 
+  Col, Button, message
+} from 'antd';
+
+const data = [];
+// for (let i = 0; i < 100; i++) {
+//   data.push({
+//     key: i.toString(),
+//     ma_npp: i.toString(),
+//     name: `Công ty TNHH ${i}`,
+//     phone: `0969996669`,
+//     address: `London Park no. ${i}`,
+//     rank: 'b',
+//   });
+// }
+const FormItem = Form.Item;
+const EditableContext = React.createContext();
+
+const EditableRow = ({ form, index, ...props }) => (
+  <EditableContext.Provider value={form}>
+    <tr {...props} />
+  </EditableContext.Provider>
+);
+
+const EditableFormRow = Form.create()(EditableRow);
 
 class EditableCell extends React.Component {
-  state = {
-    value: this.props.value,
-    editable: false,
-  }
-  handleChange = (e) => {
-    const value = e.target.value;
-    this.setState({ value });
-  }
-  check = () => {
-    this.setState({ editable: false });
-    if (this.props.onChange) {
-      this.props.onChange(this.state.value);
+  getInput = () => {
+    if (this.props.inputType === 'select') {
+      return (
+        <Select placeholder="Chọn xếp hạng">
+          <Select.Option value="A">A</Select.Option>
+          <Select.Option value="B">B</Select.Option>
+          <Select.Option value="C">C</Select.Option>
+          <Select.Option value="D">D</Select.Option>
+        </Select>
+      )
     }
-  }
-  edit = () => {
-    this.setState({ editable: true });
-  }
+    return <Input />;
+  };
   render() {
-    const { value, editable } = this.state;
+    const {
+      editing,
+      dataIndex,
+      title,
+      inputType,
+      record,
+      index,
+      ...restProps
+    } = this.props;
     return (
-      <div className="editable-cell">
-        {
-          editable ? (
-            <Input
-              value={value}
-              onChange={this.handleChange}
-              onPressEnter={this.check}
-              suffix={
-                <Icon
-                  type="check"
-                  className="editable-cell-icon-check"
-                  onClick={this.check}
-                />
-              }
-            />
-          ) : (
-            <div style={{ paddingRight: 24 }}>
-              {value || ' '}
-              <Icon
-                type="edit"
-                className="editable-cell-icon"
-                onClick={this.edit}
-              />
-            </div>
-          )
-        }
-      </div>
+      <EditableContext.Consumer>
+        {(form) => {
+          const { getFieldDecorator } = form;
+          return (
+            <td {...restProps}>
+              {editing ? (
+                <FormItem style={{ margin: 0 }}>
+                  {getFieldDecorator(dataIndex, {
+                    rules: [{
+                      required: true,
+                      message: `Hãy nhập dữ liệu ô ${title}!`,
+                    }],
+                    initialValue: record[dataIndex],
+                    
+                  })(this.getInput())}
+                </FormItem>
+              ) : restProps.children}
+            </td>
+          );
+        }}
+      </EditableContext.Consumer>
     );
   }
 }
@@ -56,96 +80,232 @@ class EditableCell extends React.Component {
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
-    this.columns = [{
-      title: 'name',
-      dataIndex: 'name',
-      width: '30%',
-      render: (text, record) => (
-        <EditableCell
-          value={text}
-          onChange={this.onCellChange(record.key, 'name')}
-        />
-      ),
-    }, {
-      title: 'age',
-      dataIndex: 'age',
-    }, {
-      title: 'address',
-      dataIndex: 'address',
-    }, {
-      title: 'operation',
-      dataIndex: 'operation',
-      render: (text, record) => {
-        return (
-          this.state.dataSource.length > 0 ?
-          (
-            <Popconfirm 
-              title="Bạn có muốn xoá?" 
-              okText="Đồng ý"
-              cancelText="Huỷ"
-              okType="danger"
-              onConfirm={() => this.onDelete(record.key)}>
-              <a>Xoá</a>
-            </Popconfirm>
-          ) : null
-        );
+    this.state = { 
+      data: [], 
+      editingKey: '' 
+    };
+    this.columns = [
+      {
+        title: 'Mã NPP',
+        dataIndex: 'ma_npp',
+        width: '10%',
+        editable: true,
       },
-    }];
-
-    this.state = {
-      dataSource: [{
-        key: '0',
-        name: 'Edward King 0',
-        age: '32',
-        address: 'London, Park Lane no. 0',
-      }, {
-        key: '1',
-        name: 'Edward King 1',
-        age: '32',
-        address: 'London, Park Lane no. 1',
-      }],
-      count: 2,
-    };
+      {
+        title: 'Tên',
+        dataIndex: 'name',
+        //width: '15%',
+        editable: true,
+      },
+      {
+        title: 'Địa chỉ',
+        dataIndex: 'address',
+        //width: '40%',
+        editable: true,
+      },
+      {
+        title: 'Điện thoại',
+        dataIndex: 'phone',
+        //width: '40%',
+        editable: true,
+      },
+      {
+        title: 'Xếp hạng',
+        dataIndex: 'ranking',
+        //width: '40%',
+        editable: true,
+      },
+      {
+        title: 'Actions',
+        dataIndex: 'operation',
+        render: (text, record) => {
+          const editable = this.isEditing(record);
+          return (
+            <div>
+              {editable ? (
+                <span>
+                  <EditableContext.Consumer>
+                    {form => (
+                      <a
+                        href="javascript:;"
+                        onClick={() => this.save(form, record.key)}
+                        style={{ marginRight: 8 }}
+                      >
+                        Lưu
+                      </a>
+                    )}
+                  </EditableContext.Consumer>
+                  <Popconfirm
+                    title="Bạn thật sự muốn huỷ?"
+                    onConfirm={() => this.cancel(record.key)}
+                  >
+                    <a href="javascript:;">Huỷ</a>
+                  </Popconfirm>
+                </span>
+              ) : (
+                <React.Fragment>
+                  <a href="javascript:;" onClick={() => this.edit(record.key)}>Sửa</a>  
+                  {" | "}
+                  <Popconfirm
+                    title="Bạn thật sự muốn xoá?"
+                    okType="danger"
+                    onConfirm={() => this.delete(record)}
+                  >
+                    <a href="javascript:;">Xoá</a>  
+                  </Popconfirm>
+                </React.Fragment>
+                
+              )}
+            </div>
+          );
+        },
+      },
+    ];
   }
-  onCellChange = (key, dataIndex) => {
-    return (value) => {
-      const dataSource = [...this.state.dataSource];
-      const target = dataSource.find(item => item.key === key);
-      if (target) {
-        target[dataIndex] = value;
-        this.setState({ dataSource });
-      }
-    };
-  }
-  onDelete = (key) => {
-    const dataSource = [...this.state.dataSource];
-    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
-  }
-  handleAdd = () => {
-    const { count, dataSource } = this.state;
-    const newData = {
-      key: count,
-      name: `Edward King ${count}`,
-      age: 32,
-      address: `London, Park Lane no. ${count}`,
+  addNewRow() {
+    let rowItem = this.getDefaultFields();
+    rowItem = {
+      ...rowItem,
+      key: this.state.data.length + 1
     };
     this.setState({
-      dataSource: [...dataSource, newData],
-      count: count + 1,
+      data: this.state.data.concat(rowItem),
+      editingKey: rowItem.key
+    })
+  }
+  getDefaultFields() {
+    return {
+      ma_npp: 'VB',
+      name: "Duc Tuan",
+      address: "Thanh Phu, Lao Cai",
+      phone: "0909090909",
+      ranking: 'b',
+    };
+  }
+  isEditing = (record) => {
+    return record.key === this.state.editingKey;
+  };
+  edit(key) {
+    this.setState({ editingKey: key });
+  }
+  save(form, key) {
+    form.validateFields((error, row) => {
+      if (error) {
+        return;
+      }
+      const newData = [...this.state.data];
+      const index = newData.findIndex(item => key === item.key);
+      if (index > -1) {
+        const item = newData[index];
+        //console.log(item, row);//update to server here
+        let newItemData = {
+          ...item,
+          ...row,
+        };
+        fetch(ISD_BASE_URL + 'updateNpp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newItemData)
+        })
+        .then((response) => {
+          return response.json()
+        }).then((json) => {
+          if(json.status == 'error') {
+            message.error(json.message, 3);
+          } else {
+            //udate table state
+            newData.splice(index, 1, {
+              ...newItemData
+            });
+            this.setState({ data: newData, editingKey: '' });
+            message.success(json.message);
+          }
+        }).catch((ex) => {
+          console.log('parsing failed', ex)
+          message.error('Có lỗi xảy ra trong quá trình lưu hoặc chỉnh sửa!');
+        });
+        //End up data to server
+      } else {
+        newData.push(data);
+        this.setState({ data: newData, editingKey: '' });
+      }
     });
   }
+  cancel = () => {
+    this.setState({ editingKey: '' });
+  };
+  delete = (record) => {
+    console.log(record);
+  };
   render() {
-    const { dataSource } = this.state;
-    const columns = this.columns;
+    const components = {
+      body: {
+        row: EditableFormRow,
+        cell: EditableCell,
+      },
+    };
+
+    /**
+      title?: React.ReactNode;
+      key?: string;
+      dataIndex?: string;
+      render?: (text: any, record: T, index: number) => React.ReactNode;
+      filters?: { text: string; value: string }[];
+      onFilter?: (value: any, record: T) => boolean;
+      filterMultiple?: boolean;
+      filterDropdown?: React.ReactNode;
+      sorter?: boolean | ((a: any, b: any) => number);
+      colSpan?: number;
+      width?: string | number;
+      className?: string;
+      fixed?: boolean | ('left' | 'right');
+      filteredValue?: any[];
+      sortOrder?: boolean | ('ascend' | 'descend');
+    */
+    const columns = this.columns.map((col) => {
+      if (!col.editable) {
+        return col;
+      }
+      return {
+        ...col,
+        onCell: record => ({
+          record,
+          inputType: col.dataIndex === 'ranking' ? 'select' : 'text',
+          dataIndex: col.dataIndex,
+          title: col.title,
+          editing: this.isEditing(record),
+        }),
+      };
+    });
+
     return (
-      <div>
-        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-          Add a row
-        </Button>
-        <Table bordered dataSource={dataSource} columns={columns} />
-      </div>
+      <React.Fragment>
+        <div className="table-operations">
+          <Row>
+            <Col span={12}>
+              <h2 className="head-title">Quản lý nhà phân phối</h2>
+            </Col>
+            <Col span={12}>
+              <div className="action-btns">
+                <Button 
+                  onClick={() => this.addNewRow()}
+                  type="primary" icon="plus">Thêm mới</Button>
+              </div>
+            </Col>
+          </Row>
+        </div>
+        <Table
+          components={components}
+          bordered
+          dataSource={this.state.data}
+          columns={columns}
+          rowClassName="editable-row"
+        />
+      </React.Fragment>
     );
   }
 }
 
-export default EditableTable;
+export default EditableTable
