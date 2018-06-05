@@ -18,21 +18,27 @@ const EditableFormRow = Form.create()(EditableRow);
 
 class EditableCell extends React.Component {
   getInput = () => {
-    if (this.props.inputType === 'select') {
-      return (
-        <Select placeholder="Chọn xếp hạng">
-          <Select.Option value="A">A</Select.Option>
-          <Select.Option value="B">B</Select.Option>
-          <Select.Option value="C">C</Select.Option>
-          <Select.Option value="D">D</Select.Option>
-        </Select>
-      )
+    switch (this.props.inputType) {
+      case 'ranking':
+        return (
+          <Select placeholder="Chọn xếp hạng">
+            <Select.Option value="A">A</Select.Option>
+            <Select.Option value="B">B</Select.Option>
+            <Select.Option value="C">C</Select.Option>
+            <Select.Option value="D">D</Select.Option>
+          </Select>
+        );
+        break;
+      default:
+        return <Input />;
+        break;
     }
-    return <Input />;
+    
   };
   render() {
     const {
       editing,
+      required,
       dataIndex,
       title,
       inputType,
@@ -50,7 +56,7 @@ class EditableCell extends React.Component {
                 <FormItem style={{ margin: 0 }}>
                   {getFieldDecorator(dataIndex, {
                     rules: [{
-                      required: true,
+                      required: required,
                       message: `Hãy nhập dữ liệu ô ${title}!`,
                     }],
                     initialValue: record[dataIndex],
@@ -79,18 +85,21 @@ class EditableTable extends React.Component {
         dataIndex: 'ma_npp',
         width: '10%',
         editable: true,
+        required: true,
       },
       {
         title: 'Tên',
         dataIndex: 'name',
         //width: '15%',
         editable: true,
+        required: true
       },
       {
         title: 'Địa chỉ',
         dataIndex: 'address',
         //width: '40%',
         editable: true,
+        required: true
       },
       {
         title: 'Điện thoại',
@@ -191,7 +200,6 @@ class EditableTable extends React.Component {
           ...item,
           ...row,
         };
-        console.log(newItemData);
         fetch(ISD_BASE_URL + 'updateNpp', {
           method: 'POST',
           headers: {
@@ -309,10 +317,11 @@ class EditableTable extends React.Component {
         ...col,
         onCell: record => ({
           record,
-          inputType: col.dataIndex === 'ranking' ? 'select' : 'text',
+          inputType: col.dataIndex,
           dataIndex: col.dataIndex,
           title: col.title,
           editing: this.isEditing(record),
+          required: col.required
         }),
       };
     });
