@@ -5,17 +5,6 @@ import {
   Col, Button, message
 } from 'antd';
 
-const data = [];
-// for (let i = 0; i < 100; i++) {
-//   data.push({
-//     key: i.toString(),
-//     ma_npp: i.toString(),
-//     name: `Công ty TNHH ${i}`,
-//     phone: `0969996669`,
-//     address: `London Park no. ${i}`,
-//     rank: 'b',
-//   });
-// }
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
 
@@ -169,17 +158,17 @@ class EditableTable extends React.Component {
       key: this.state.data.length + 1
     };
     this.setState({
-      data: this.state.data.concat(rowItem),
+      data: [rowItem, ...this.state.data],
       editingKey: rowItem.key
     })
   }
   getDefaultFields() {
     return {
-      ma_npp: 'VB',
-      name: "Duc Tuan",
-      address: "Thanh Phu, Lao Cai",
-      phone: "0909090909",
-      ranking: 'b',
+      ma_npp: "",
+      name: "",
+      address: "",
+      phone: "",
+      ranking: "A",
     };
   }
   isEditing = (record) => {
@@ -202,6 +191,7 @@ class EditableTable extends React.Component {
           ...item,
           ...row,
         };
+        console.log(newItemData);
         fetch(ISD_BASE_URL + 'updateNpp', {
           method: 'POST',
           headers: {
@@ -235,10 +225,34 @@ class EditableTable extends React.Component {
   }
   cancel = () => {
     this.setState({ editingKey: '' });
-  };
+  }
   delete = (record) => {
     console.log(record);
-  };
+  }
+  fetchData() {
+    fetch(ISD_BASE_URL + 'fetchNpp')
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => {
+      if(json.status == 'error') {
+        message.warning(json.message, 3);
+      } else {
+        if(json.data) {
+          //Add key prop for table
+          let data = json.data.map((item, index) => ({...item, key: index}) );
+          this.setState({data});
+        }
+      }
+    })
+    .catch((error) => {
+      message.error('Có lỗi khi tải dữ liệu nhà phân phối!', 3);
+      console.log(error);
+    }); 
+  }
+  componentDidMount() {
+    this.fetchData();
+  }
   render() {
     const components = {
       body: {
