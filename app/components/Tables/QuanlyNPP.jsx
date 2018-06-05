@@ -227,7 +227,23 @@ class EditableTable extends React.Component {
     this.setState({ editingKey: '' });
   }
   delete = (record) => {
-    console.log(record);
+    if(record.id) {
+      fetch(ISD_BASE_URL + 'deleteNpp/' + record.id)
+      .then((response) => response.json())
+      .then((json) => {
+        if(json.status == 'error') {
+          message.error('Có lỗi xảy ra khi xoá nhà phân phối!', 3);
+        } else {
+          let newData = this.state.data.filter((item) => item.id != json.data);
+          this.setState({data: newData});
+          message.success(json.message);
+        }
+      })
+      .catch((error) => {
+        message.error('Có lỗi xảy ra khi xoá nhà phân phối!', 3);
+        console.log(error);
+      });
+    }
   }
   fetchData() {
     fetch(ISD_BASE_URL + 'fetchNpp')
