@@ -243,6 +243,13 @@ class EditableTable extends React.Component {
         message.error('Có lỗi xảy ra khi xoá nhà phân phối!', 3);
         console.log(error);
       });
+    } else {
+      if(record.key) {
+        let newData = this.state.data.filter((item) => item.key != record.key);
+        this.setState({
+          data: newData
+        })
+      }  
     }
   }
   fetchData() {
