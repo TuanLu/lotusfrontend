@@ -118,7 +118,7 @@ class EditableTable extends React.Component {
         title: 'Mật khẩu',
         dataIndex: 'hash',
         editable: true,
-        required: true,
+        required: false, //edit mode dont required
         render: (text, record) => {
           return 'Đã mã hoá';
         }
