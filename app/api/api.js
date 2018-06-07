@@ -58,7 +58,7 @@ export const sortArrayByProp = (prop, unsortArr) => {
 };
 
 export const getTokenHeader = () => {
-  let token = localStorage.getItem('ISD_TOKEN');
+  let token = sessionStorage.getItem('ISD_TOKEN');
   if(token != "" && token != null) {
     return {
       'Accept': 'application/json',

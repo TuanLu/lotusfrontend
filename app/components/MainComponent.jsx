@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import { Layout, Menu, Icon, Button } from 'antd';
+import { Layout, Menu, Icon, Button, message } from 'antd';
 const { Header, Sider, Content } = Layout;
 import { Row, Col } from 'antd';
 import SidebarMenu from './SidebarMenu'
@@ -22,24 +22,33 @@ class MainComponent extends React.Component {
     });
   }
   componentWillMount() {
-    let token = localStorage.getItem('ISD_TOKEN');
-    if(token != "" && token != null) {
-      fetch(ISD_BASE_URL + 'fetchRoles', {
-        headers: getTokenHeader()   
-      })
-      .then((response) => response.json())
-      .then((json) => {
-        if(json.data) {
-          this.props.dispatch(updateStateData({
-            showLogin: false,
-            userRoles: json.data,
-            defaultRouter: json.data[0].path
-          }));
-        }
-      })
-      .catch((error) => {
-        console.warn(error);
-      });
+    let {mainState} = this.props;
+    if(!mainState.userId) {
+      let token = sessionStorage.getItem('ISD_TOKEN');
+      if(token != "" && token != null) {
+        fetch(ISD_BASE_URL + 'fetchRoles', {
+          headers: getTokenHeader()   
+        })
+        .then((response) => response.json())
+        .then((json) => {
+          if(json.userId) {
+            this.props.dispatch(updateStateData({
+              showLogin: false,
+              userRoles: json.scopes,
+              defaultRouter: json.scopes[0] && json.scopes[0]['path'] ? json.scopes[0]['path'] : ''
+            }));
+          } else if(json.status == "error") {
+            message.error(json.message, 3);
+          }
+        })
+        .catch((error) => {
+          console.warn(error);
+        });
+      }
+    } else {
+      this.props.dispatch(updateStateData({
+        defaultRouter: mainState.defaultRouter
+      }));
     }
   }
   renderContent(router) {

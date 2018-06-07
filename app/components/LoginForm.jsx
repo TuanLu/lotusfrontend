@@ -24,14 +24,20 @@ class NormalLoginForm extends React.Component {
     .then((response) => response.json())
     .then((json) => {
       if(json.token) {
-        localStorage.setItem('ISD_TOKEN', json.token);
-        this.props.dispatch(updateStateData({showLogin: false}));
+        sessionStorage.setItem('ISD_TOKEN', json.token);
+        this.props.dispatch(updateStateData({
+          showLogin: false,
+          userRoles: json.scopes || [],
+          userId: json.userId,
+          defaultRouter: json.scopes[0] && json.scopes[0]['path'] ? json.scopes[0]['path'] : ''
+        }));
       } else {
-        message.error(json.message);
+        message.error(json.message, 5);
       }
     })
     .catch((error) => {
       console.warn(error);
+      message.error('Có lỗi trong quá trình đăng nhập!');
     });
   }
   render() {

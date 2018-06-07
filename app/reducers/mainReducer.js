@@ -23,7 +23,7 @@ export default (state = _designDefault, action) => {
       cloneState = cloneDeep(state);
       if(action.updateData && action.updateData.showLogin) {
         //Clean localStore
-        localStorage.setItem('ISD_TOKEN', '');
+        sessionStorage.setItem('ISD_TOKEN', '');
       }
       cloneState = {
         ...cloneState,
