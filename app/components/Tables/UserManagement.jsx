@@ -6,6 +6,7 @@ import {
 } from 'antd';
 import {getTokenHeader, statusOptions} from 'ISD_API'
 import {updateStateData} from 'actions'
+import Roles from './User/Roles'
 
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
@@ -32,6 +33,15 @@ class EditableCell extends React.Component {
         break;
       case 'hash':
       return <Input type="password" placeholder="Nhập mật khẩu" />;
+        break;
+      case 'roles':
+        let roles = [];
+        if(this.props.record 
+          && this.props.record.roles
+          && this.props.record.roles != "") {
+          roles = this.props.record.roles.split(',')
+        }
+        return <Roles selectedRoles={roles}/>
         break;
       default:
         return <Input />;
@@ -120,6 +130,12 @@ class EditableTable extends React.Component {
         required: false
       },
       {
+        title: 'Quyền',
+        dataIndex: 'roles',
+        editable: true,
+        required: false
+      },
+      {
         title: 'Trạng thái',
         dataIndex: 'status',
         editable: true,
@@ -192,7 +208,8 @@ class EditableTable extends React.Component {
       email: "",
       name: "",
       hash: "",
-      status: "1"
+      status: "1",
+      roles: []
     };
   }
   isEditing = (record) => {
