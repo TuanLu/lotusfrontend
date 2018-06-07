@@ -4,11 +4,17 @@ const FormItem = Form.Item;
 import {updateStateData} from 'actions'
 
 class NormalLoginForm extends React.Component {
+  state = {
+    loading: false
+  }
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         //console.log('Received values of form: ', values);
+        this.setState({
+          loading: true
+        })
         this.getToken({...values});
       }
     });
@@ -34,6 +40,9 @@ class NormalLoginForm extends React.Component {
       } else {
         message.error(json.message, 5);
       }
+      this.setState({
+        loading: false
+      })
     })
     .catch((error) => {
       console.warn(error);
@@ -63,7 +72,7 @@ class NormalLoginForm extends React.Component {
             )}
           </FormItem>
           <FormItem>
-            <Button type="primary" htmlType="submit" className="login-form-button">
+            <Button loading={this.state.loading} type="primary" htmlType="submit" className="login-form-button">
               Đăng nhập
             </Button>
           </FormItem>
