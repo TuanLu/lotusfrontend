@@ -13,28 +13,35 @@ class SidebarMenu extends React.Component {
         >
           <Menu.Item key="1">
             <Icon type="pie-chart" />
-            <span>Quản lý nhà phân phối</span>
+            <span>QL Nhà phân phối</span>
           </Menu.Item>
           <Menu.Item key="2">
             <Icon type="desktop" />
-            <span>Option 2</span>
+            <span>QL Nhà cung cấp</span>
           </Menu.Item>
           <Menu.Item key="3">
             <Icon type="inbox" />
-            <span>Option 3</span>
+            <span>QL Kho hàng</span>
           </Menu.Item>
-          <SubMenu key="sub1" title={<span><Icon type="mail" /><span>Navigation One</span></span>}>
-            <Menu.Item key="5">Option 5</Menu.Item>
-            <Menu.Item key="6">Option 6</Menu.Item>
-            <Menu.Item key="7">Option 7</Menu.Item>
-            <Menu.Item key="8">Option 8</Menu.Item>
+          <SubMenu key="dmsp" title={<span><Icon type="mail" /><span>Danh mục sản phẩm</span></span>}>
+            <Menu.Item key="vt">Vật tư</Menu.Item>
+            <Menu.Item key="vl">Nguyên vật liệu</Menu.Item>
+            <Menu.Item key="hc">Hóa chất</Menu.Item>
+            <Menu.Item key="btp">Bán thành phẩm</Menu.Item>
+            <Menu.Item key="tp">Thành phẩm</Menu.Item>
           </SubMenu>
-          <SubMenu key="sub2" title={<span><Icon type="appstore" /><span>Navigation Two</span></span>}>
-            <Menu.Item key="9">Option 9</Menu.Item>
-            <Menu.Item key="10">Option 10</Menu.Item>
-            <SubMenu key="sub3" title="Submenu">
-              <Menu.Item key="11">Option 11</Menu.Item>
-              <Menu.Item key="12">Option 12</Menu.Item>
+          <SubMenu key="kho" title={<span><Icon type="appstore" /><span>Quản lý kho</span></span>}>
+            <SubMenu key="knl" title="Kho nguyên liệu">
+              <Menu.Item key="a">Kệ A</Menu.Item>
+              <Menu.Item key="b">Kệ B</Menu.Item>
+            </SubMenu>
+            <SubMenu key="kvt" title="Kho vật tư">
+              <Menu.Item key="a">Kệ A</Menu.Item>
+              <Menu.Item key="b">Kệ B</Menu.Item>
+            </SubMenu>
+            <SubMenu key="ktp" title="Kho thành phẩm">
+              <Menu.Item key="a">Kệ A</Menu.Item>
+              <Menu.Item key="b">Kệ B</Menu.Item>
             </SubMenu>
           </SubMenu>
         </Menu>

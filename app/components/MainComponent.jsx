@@ -4,6 +4,8 @@ const { Header, Sider, Content } = Layout;
 import { Row, Col } from 'antd';
 import SidebarMenu from './SidebarMenu'
 import QuanlyNPP from './Tables/QuanlyNPP'
+import QuanlyKho from './Tables/QuanlyKho'
+import QuanlyCat from './Tables/QuanlyCate'
 
 class MainComponent extends React.Component {
   state = {
@@ -37,6 +39,8 @@ class MainComponent extends React.Component {
           </Header>
           <div style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
             <QuanlyNPP/>
+            <QuanlyKho/>
+            <QuanlyCat/>
           </div>
         </Layout>
       </Layout>
