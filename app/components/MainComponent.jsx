@@ -7,6 +7,7 @@ import SidebarMenu from './SidebarMenu'
 import QuanlyNPP from './Tables/QuanlyNPP'
 import UserManagement from './Tables/UserManagement'
 import LoginForm from './LoginForm'
+import UserInfo from './UserInfo'
 import {getTokenHeader} from 'ISD_API'
 import {updateStateData} from 'actions'
 import Loading from './Loading'
@@ -23,7 +24,7 @@ class MainComponent extends React.Component {
   }
   componentWillMount() {
     let {mainState} = this.props;
-    if(!mainState.userId) {
+    if(!mainState.userInfo) {
       let token = sessionStorage.getItem('ISD_TOKEN');
       if(token != "" && token != null) {
         fetch(ISD_BASE_URL + 'fetchRoles', {
@@ -31,11 +32,12 @@ class MainComponent extends React.Component {
         })
         .then((response) => response.json())
         .then((json) => {
-          if(json.userId) {
+          if(json.userInfo) {
             this.props.dispatch(updateStateData({
               showLogin: false,
               userRoles: json.scopes,
-              defaultRouter: json.scopes[0] && json.scopes[0]['path'] ? json.scopes[0]['path'] : ''
+              defaultRouter: json.scopes[0] && json.scopes[0]['path'] ? json.scopes[0]['path'] : '',
+              userInfo: json.userInfo
             }));
           } else if(json.status == "error") {
             message.error(json.message, 3);
@@ -89,6 +91,9 @@ class MainComponent extends React.Component {
               type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
               onClick={this.toggle}
             />
+            <UserInfo 
+              mainState={this.props.mainState}
+              dispatch={this.props.dispatch}/>
           </Header>
           <div style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
             {!defaultRouter? 

@@ -34,15 +34,15 @@ class NormalLoginForm extends React.Component {
         this.props.dispatch(updateStateData({
           showLogin: false,
           userRoles: json.scopes || [],
-          userId: json.userId,
+          userInfo: json.userInfo,
           defaultRouter: json.scopes[0] && json.scopes[0]['path'] ? json.scopes[0]['path'] : ''
         }));
       } else {
         message.error(json.message, 5);
+        this.setState({
+          loading: false
+        })
       }
-      this.setState({
-        loading: false
-      })
     })
     .catch((error) => {
       console.warn(error);

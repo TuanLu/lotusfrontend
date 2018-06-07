@@ -202,11 +202,9 @@ class EditableTable extends React.Component {
           ...item,
           ...row,
         };
-        fetch(ISD_BASE_URL + 'updateNpp', {
+        fetch(ISD_BASE_URL + 'npp/updateNpp', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: getTokenHeader(),
           body: JSON.stringify(newItemData)
         })
         .then((response) => {
@@ -242,7 +240,9 @@ class EditableTable extends React.Component {
   }
   delete = (record) => {
     if(record.id) {
-      fetch(ISD_BASE_URL + 'deleteNpp/' + record.id)
+      fetch(ISD_BASE_URL + 'npp/deleteNpp/' + record.id, {
+        headers: getTokenHeader()
+      })
       .then((response) => response.json())
       .then((json) => {
         if(json.status == 'error') {
@@ -267,7 +267,7 @@ class EditableTable extends React.Component {
     }
   }
   fetchData() {
-    fetch(ISD_BASE_URL + 'fetchNpp', {
+    fetch(ISD_BASE_URL + 'npp/fetchNpp', {
       headers: getTokenHeader()
     })
     .then((response) => {
