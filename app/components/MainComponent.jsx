@@ -6,6 +6,7 @@ import SidebarMenu from './SidebarMenu'
 import QuanlyNPP from './Tables/QuanlyNPP'
 import QuanlyKho from './Tables/QuanlyKho'
 import QuanlyCat from './Tables/QuanlyCate'
+import QuanlyKh from './Tables/QuanlyKh'
 
 class MainComponent extends React.Component {
   state = {
@@ -41,6 +42,7 @@ class MainComponent extends React.Component {
             <QuanlyNPP/>
             <QuanlyKho/>
             <QuanlyCat/>
+            <QuanlyKh/>
           </div>
         </Layout>
       </Layout>
