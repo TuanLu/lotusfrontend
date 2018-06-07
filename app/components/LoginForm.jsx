@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Icon, Input, Button, Checkbox, Layout, message } from 'antd';
+import { Form, Icon, Input, Button, message } from 'antd';
 const FormItem = Form.Item;
 import {updateStateData} from 'actions'
 
@@ -37,29 +37,32 @@ class NormalLoginForm extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <Layout style={{maxWidth: 400, margin: '20px auto'}}>
+      <div className="login-wrapper">
+        <div className="login-logo" >
+          <img src="./images/logo.png"/>
+        </div>
         <Form onSubmit={this.handleSubmit} className="login-form">
           <FormItem>
             {getFieldDecorator('userName', {
-              rules: [{ required: true, message: 'Please input your username!' }],
+              rules: [{ required: true, message: 'Nhập tên đăng nhập!' }],
             })(
-              <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+              <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Tên đăng nhập" />
             )}
           </FormItem>
           <FormItem>
             {getFieldDecorator('password', {
-              rules: [{ required: true, message: 'Please input your Password!' }],
+              rules: [{ required: true, message: 'Nhập mật khẩu!' }],
             })(
-              <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+              <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Mật khẩu" />
             )}
           </FormItem>
           <FormItem>
             <Button type="primary" htmlType="submit" className="login-form-button">
-              Log in
+              Đăng nhập
             </Button>
           </FormItem>
         </Form>
-      </Layout>
+      </div>
     );
   }
 }
