@@ -56,3 +56,19 @@ export const sortArrayByProp = (prop, unsortArr) => {
   });
   return sortedArray;
 };
+
+export const getTokenHeader = () => {
+  let token = localStorage.getItem('ISD_TOKEN');
+  if(token != "" && token != null) {
+    return {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token,
+    };
+  }
+}
+
+export const statusOptions = [
+  {value: '0', text: 'Ngừng kích hoạt'},
+  {value: '1', text: 'Kích hoạt'},
+];

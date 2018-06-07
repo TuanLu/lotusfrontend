@@ -4,7 +4,7 @@ import {
   Popconfirm, Form, Row, 
   Col, Button, message
 } from 'antd';
-import {getTokenHeader} from 'ISD_API'
+import {getTokenHeader, statusOptions} from 'ISD_API'
 import {updateStateData} from 'actions'
 
 const FormItem = Form.Item;
@@ -21,15 +21,17 @@ const EditableFormRow = Form.create()(EditableRow);
 class EditableCell extends React.Component {
   getInput = () => {
     switch (this.props.inputType) {
-      case 'ranking':
+      case 'status':
         return (
           <Select placeholder="Chọn xếp hạng">
-            <Select.Option value="A">A</Select.Option>
-            <Select.Option value="B">B</Select.Option>
-            <Select.Option value="C">C</Select.Option>
-            <Select.Option value="D">D</Select.Option>
+            {statusOptions.map((option) => {
+              return <Select.Option key={option.value} key={option.value}>{option.text}</Select.Option>
+            })}
           </Select>
         );
+        break;
+      case 'hash':
+      return <Input type="password" placeholder="Nhập mật khẩu" />;
         break;
       default:
         return <Input />;
@@ -57,10 +59,18 @@ class EditableCell extends React.Component {
               {editing ? (
                 <FormItem style={{ margin: 0 }}>
                   {getFieldDecorator(dataIndex, {
-                    rules: [{
-                      required: required,
-                      message: `Hãy nhập dữ liệu ô ${title}!`,
-                    }],
+                    rules: ((inputName) => {
+                      let rules = [{
+                        required: required,
+                        message: `Hãy nhập dữ liệu ô ${title}!`,
+                      }];
+                      if(inputName == 'email') {
+                        rules = [...rules, {
+                          type: 'email', message: 'Email không hợp lệ',
+                        }]
+                      }
+                      return rules;
+                    })(dataIndex),
                     initialValue: record[dataIndex],
                     
                   })(this.getInput())}
@@ -83,37 +93,40 @@ class EditableTable extends React.Component {
     };
     this.columns = [
       {
-        title: 'Mã NPP',
-        dataIndex: 'ma_npp',
-        width: '10%',
+        title: 'Tên đăng nhập',
+        dataIndex: 'username',
+        editable: true,
+        required: true
+      },
+      {
+        title: 'Email',
+        dataIndex: 'email',
+        editable: true,
+        required: true
+      },
+      {
+        title: 'Mật khẩu',
+        dataIndex: 'hash',
         editable: true,
         required: true,
+        render: (text, record) => {
+          return 'Đã mã hoá';
+        }
       },
       {
-        title: 'Tên',
+        title: 'Họ và tên',
         dataIndex: 'name',
-        //width: '15%',
         editable: true,
-        required: true
+        required: false
       },
       {
-        title: 'Địa chỉ',
-        dataIndex: 'address',
-        //width: '40%',
+        title: 'Trạng thái',
+        dataIndex: 'status',
         editable: true,
-        required: true
-      },
-      {
-        title: 'Điện thoại',
-        dataIndex: 'phone',
-        //width: '40%',
-        editable: true,
-      },
-      {
-        title: 'Xếp hạng',
-        dataIndex: 'ranking',
-        //width: '40%',
-        editable: true,
+        render: (text, record) => {
+          let selectedOption = statusOptions.filter((option) => option.value == text);
+          return <span>{selectedOption[0].text}</span>
+        }
       },
       {
         title: 'Actions',
@@ -175,11 +188,11 @@ class EditableTable extends React.Component {
   }
   getDefaultFields() {
     return {
-      ma_npp: "",
+      username: "",
+      email: "",
       name: "",
-      address: "",
-      phone: "",
-      ranking: "A",
+      hash: "",
+      status: "1"
     };
   }
   isEditing = (record) => {
@@ -202,7 +215,7 @@ class EditableTable extends React.Component {
           ...item,
           ...row,
         };
-        fetch(ISD_BASE_URL + 'updateNpp', {
+        fetch(ISD_BASE_URL + 'updateUser', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -242,11 +255,11 @@ class EditableTable extends React.Component {
   }
   delete = (record) => {
     if(record.id) {
-      fetch(ISD_BASE_URL + 'deleteNpp/' + record.id)
+      fetch(ISD_BASE_URL + 'deleteUser/' + record.id)
       .then((response) => response.json())
       .then((json) => {
         if(json.status == 'error') {
-          message.error('Có lỗi xảy ra khi xoá nhà phân phối!', 3);
+          message.error(response.message, 3);
         } else {
           let newData = this.state.data.filter((item) => item.id != json.data);
           this.setState({data: newData});
@@ -254,7 +267,7 @@ class EditableTable extends React.Component {
         }
       })
       .catch((error) => {
-        message.error('Có lỗi xảy ra khi xoá nhà phân phối!', 3);
+        message.error('Có lỗi xảy ra khi xoá user!', 3);
         console.log(error);
       });
     } else {
@@ -267,7 +280,7 @@ class EditableTable extends React.Component {
     }
   }
   fetchData() {
-    fetch(ISD_BASE_URL + 'fetchNpp', {
+    fetch(ISD_BASE_URL + 'fetchUsers', {
       headers: getTokenHeader()
     })
     .then((response) => {
@@ -339,7 +352,7 @@ class EditableTable extends React.Component {
         <div className="table-operations">
           <Row>
             <Col span={12}>
-              <h2 className="head-title">Quản lý nhà phân phối</h2>
+              <h2 className="head-title">Quản lý người dùng</h2>
             </Col>
             <Col span={12}>
               <div className="action-btns">

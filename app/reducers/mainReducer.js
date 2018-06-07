@@ -3,18 +3,9 @@ import {cloneDeep} from 'lodash'
 
 
 let _designDefault = {
-    filter: {
-      year: 2017,//(new Date()).getFullYear(),
-      product: 'all',
-      area: 'all',
-      quarter: 1,
-      month: 1,
-      week: 1,
-      province: '1',//Hanoi = 1
-    },
-    products: [],
-    provinces: [],
+    showLogin: true,
     reportBy: window.ISD_CURRENT_PAGE ? window.ISD_CURRENT_PAGE : 'doanh_thu_tong',
+    userRoles: []
   },
   cloneState;
 
@@ -30,6 +21,10 @@ export default (state = _designDefault, action) => {
       break;
     case actionTypes.UPDATE_STATE_DATA:
       cloneState = cloneDeep(state);
+      if(action.updateData && action.updateData.showLogin) {
+        //Clean localStore
+        localStorage.setItem('ISD_TOKEN', '');
+      }
       cloneState = {
         ...cloneState,
         ...action.updateData
