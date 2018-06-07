@@ -9,6 +9,7 @@ import UserManagement from './Tables/UserManagement'
 import LoginForm from './LoginForm'
 import {getTokenHeader} from 'ISD_API'
 import {updateStateData} from 'actions'
+import Loading from './Loading'
 
 class MainComponent extends React.Component {
   state = {
@@ -46,7 +47,7 @@ class MainComponent extends React.Component {
       case 'npp':
         return <QuanlyNPP dispatch={this.props.dispatch} mainState={this.props.mainState}/>
         break;
-      case 'user':
+      case 'qluser':
         return <UserManagement dispatch={this.props.dispatch} mainState={this.props.mainState}/>
         break;
     
@@ -82,11 +83,9 @@ class MainComponent extends React.Component {
           </Header>
           <div style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
             {!defaultRouter? 
-              <Button style={{margin: '0 auto'}} type="primary" loading>
-                Đang tải dữ liệu
-              </Button>
+              <Loading/>
               : 
-              this.renderContent('user')
+              this.renderContent(defaultRouter)
             }
           </div>
         </Layout>

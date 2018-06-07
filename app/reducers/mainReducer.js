@@ -4,7 +4,7 @@ import {cloneDeep} from 'lodash'
 
 let _designDefault = {
     showLogin: true,
-    reportBy: window.ISD_CURRENT_PAGE ? window.ISD_CURRENT_PAGE : 'doanh_thu_tong',
+    defaultRouter: '',
     userRoles: []
   },
   cloneState;
