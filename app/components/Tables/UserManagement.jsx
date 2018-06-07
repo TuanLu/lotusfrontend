@@ -150,7 +150,7 @@ class EditableTable extends React.Component {
         render: (text, record) => {
           const editable = this.isEditing(record);
           return (
-            <div>
+            <div style={{minWidth: 100}}>
               {editable ? (
                 <span>
                   <EditableContext.Consumer>
@@ -168,7 +168,7 @@ class EditableTable extends React.Component {
                     title="Bạn thật sự muốn huỷ?"
                     onConfirm={() => this.cancel(record.key)}
                   >
-                    <a href="javascript:;">Huỷ</a>
+                    <a href="javascript:;"> {" | "}Huỷ</a>
                   </Popconfirm>
                 </span>
               ) : (
@@ -232,11 +232,9 @@ class EditableTable extends React.Component {
           ...item,
           ...row,
         };
-        fetch(ISD_BASE_URL + 'updateUser', {
+        fetch(ISD_BASE_URL + 'users/updateUser', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: getTokenHeader(),
           body: JSON.stringify(newItemData)
         })
         .then((response) => {
@@ -272,7 +270,9 @@ class EditableTable extends React.Component {
   }
   delete = (record) => {
     if(record.id) {
-      fetch(ISD_BASE_URL + 'deleteUser/' + record.id)
+      fetch(ISD_BASE_URL + 'users/deleteUser/' + record.id, {
+        headers: getTokenHeader(),
+      })
       .then((response) => response.json())
       .then((json) => {
         if(json.status == 'error') {
@@ -297,7 +297,7 @@ class EditableTable extends React.Component {
     }
   }
   fetchData() {
-    fetch(ISD_BASE_URL + 'fetchUsers', {
+    fetch(ISD_BASE_URL + 'users/fetchUsers', {
       headers: getTokenHeader()
     })
     .then((response) => {
@@ -375,7 +375,7 @@ class EditableTable extends React.Component {
               <div className="action-btns">
                 <Button 
                   onClick={() => this.addNewRow()}
-                  type="primary" icon="plus">Thêm mới</Button>
+                  type="primary" icon="plus">Thêm mới người dùng</Button>
               </div>
             </Col>
           </Row>

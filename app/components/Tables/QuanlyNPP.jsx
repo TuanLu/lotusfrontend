@@ -121,7 +121,7 @@ class EditableTable extends React.Component {
         render: (text, record) => {
           const editable = this.isEditing(record);
           return (
-            <div>
+            <div style={{minWidth: 100}}>
               {editable ? (
                 <span>
                   <EditableContext.Consumer>
@@ -345,7 +345,7 @@ class EditableTable extends React.Component {
               <div className="action-btns">
                 <Button 
                   onClick={() => this.addNewRow()}
-                  type="primary" icon="plus">Thêm mới</Button>
+                  type="primary" icon="plus">Thêm mới NPP</Button>
               </div>
             </Col>
           </Row>
