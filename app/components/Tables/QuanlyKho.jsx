@@ -4,6 +4,7 @@ import {
   Popconfirm, Form, Row, 
   Col, Button, message
 } from 'antd';
+import { getTokenHeader } from 'ISD_API';
 
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
@@ -176,11 +177,9 @@ class EditableTable extends React.Component {
           ...item,
           ...row,
         };
-        fetch(ISD_BASE_URL + 'updateKho', {
+        fetch(ISD_BASE_URL + 'qlkho/updateKho', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: getTokenHeader(),
           body: JSON.stringify(newItemData)
         })
         .then((response) => {
@@ -213,7 +212,9 @@ class EditableTable extends React.Component {
   }
   delete = (record) => {
     if(record.id) {
-      fetch(ISD_BASE_URL + 'deleteKho/' + record.id)
+      fetch(ISD_BASE_URL + 'qlkho/deleteKho/' + record.id, {
+        headers: getTokenHeader()
+      })
       .then((response) => response.json())
       .then((json) => {
         if(json.status == 'error') {
@@ -238,7 +239,9 @@ class EditableTable extends React.Component {
     }
   }
   fetchData() {
-    fetch(ISD_BASE_URL + 'fetchKho')
+    fetch(ISD_BASE_URL + 'qlkho/fetchKho', {
+      headers: getTokenHeader()
+    })
     .then((response) => {
       return response.json();
     })
