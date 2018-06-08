@@ -57,14 +57,23 @@ class MainComponent extends React.Component {
     }
   }
   renderContent(router) {
+    let {dispatch} = this.props;
     switch (router) {
       case 'npp':
-        return <QuanlyNPP dispatch={this.props.dispatch} mainState={this.props.mainState}/>
+        return <QuanlyNPP dispatch={dispatch} mainState={this.props.mainState}/>
         break;
       case 'qluser':
-        return <UserManagement dispatch={this.props.dispatch} mainState={this.props.mainState}/>
+        return <UserManagement dispatch={dispatch} mainState={this.props.mainState}/>
         break;
-    
+      case 'qlkho':
+        return <QuanlyKho dispatch={dispatch}/>
+        break;
+      case 'qlcate':
+        return <QuanlyCat dispatch={dispatch}/>
+        break;
+      case 'qlkh':
+        return <QuanlyKh dispatch={dispatch}/>
+        break;
       default:
         break;
     }
@@ -104,9 +113,6 @@ class MainComponent extends React.Component {
               : 
               this.renderContent(defaultRouter)
             }
-            <QuanlyKho/>
-            <QuanlyCat/>
-            <QuanlyKh/>
           </div>
         </Layout>
       </Layout>
