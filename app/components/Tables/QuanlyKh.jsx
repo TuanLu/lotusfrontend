@@ -103,7 +103,7 @@ class EditableTable extends React.Component {
         dataIndex: 'description',
         //width: '40%',
         editable: true,
-        required: true
+        required: false
       },
       {
         title: 'Actions',
@@ -165,7 +165,7 @@ class EditableTable extends React.Component {
   }
   getDefaultFields() {
     return {
-      ma_cat: "",
+      ma_kh: "",
       name: "",
       description: ""
     };
@@ -205,7 +205,8 @@ class EditableTable extends React.Component {
           } else {
             //udate table state
             newData.splice(index, 1, {
-              ...newItemData
+              ...newItemData,
+              ...json.data
             });
             this.setState({ data: newData, editingKey: '' });
             message.success(json.message);
@@ -327,7 +328,7 @@ class EditableTable extends React.Component {
               <div className="action-btns">
                 <Button 
                   onClick={() => this.addNewRow()}
-                  type="primary" icon="plus">Thêm mới</Button>
+                  type="primary" icon="plus">Thêm khách hàng mới</Button>
               </div>
             </Col>
           </Row>
