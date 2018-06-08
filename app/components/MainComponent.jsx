@@ -11,6 +11,9 @@ import UserInfo from './UserInfo'
 import {getTokenHeader} from 'ISD_API'
 import {updateStateData} from 'actions'
 import Loading from './Loading'
+import QuanlyKho from './Tables/QuanlyKho'
+import QuanlyCat from './Tables/QuanlyCate'
+import QuanlyKh from './Tables/QuanlyKh'
 
 class MainComponent extends React.Component {
   state = {
@@ -101,6 +104,9 @@ class MainComponent extends React.Component {
               : 
               this.renderContent(defaultRouter)
             }
+            <QuanlyKho/>
+            <QuanlyCat/>
+            <QuanlyKh/>
           </div>
         </Layout>
       </Layout>
