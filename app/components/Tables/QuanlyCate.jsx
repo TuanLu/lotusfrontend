@@ -19,16 +19,6 @@ const EditableFormRow = Form.create()(EditableRow);
 class EditableCell extends React.Component {
   getInput = () => {
     switch (this.props.inputType) {
-      case 'ranking':
-        return (
-          <Select placeholder="Chọn xếp hạng">
-            <Select.Option value="A">A</Select.Option>
-            <Select.Option value="B">B</Select.Option>
-            <Select.Option value="C">C</Select.Option>
-            <Select.Option value="D">D</Select.Option>
-          </Select>
-        );
-        break;
       default:
         return <Input />;
         break;
@@ -80,13 +70,6 @@ class EditableTable extends React.Component {
       editingKey: '' 
     };
     this.columns = [
-      {
-        title: 'Mã Danh Mục',
-        dataIndex: 'ma_cat',
-        width: '10%',
-        editable: true,
-        required: true,
-      },
       {
         title: 'Tên danh mục',
         dataIndex: 'name',
@@ -161,7 +144,6 @@ class EditableTable extends React.Component {
   }
   getDefaultFields() {
     return {
-      ma_cat: "",
       name: "",
       description: ""
     };
@@ -201,7 +183,8 @@ class EditableTable extends React.Component {
           } else {
             //udate table state
             newData.splice(index, 1, {
-              ...newItemData
+              ...newItemData,
+              ...json.data
             });
             this.setState({ data: newData, editingKey: '' });
             message.success(json.message);
@@ -277,24 +260,6 @@ class EditableTable extends React.Component {
         cell: EditableCell,
       },
     };
-
-    /**
-      title?: React.ReactNode;
-      key?: string;
-      dataIndex?: string;
-      render?: (text: any, record: T, index: number) => React.ReactNode;
-      filters?: { text: string; value: string }[];
-      onFilter?: (value: any, record: T) => boolean;
-      filterMultiple?: boolean;
-      filterDropdown?: React.ReactNode;
-      sorter?: boolean | ((a: any, b: any) => number);
-      colSpan?: number;
-      width?: string | number;
-      className?: string;
-      fixed?: boolean | ('left' | 'right');
-      filteredValue?: any[];
-      sortOrder?: boolean | ('ascend' | 'descend');
-    */
     const columns = this.columns.map((col) => {
       if (!col.editable) {
         return col;
