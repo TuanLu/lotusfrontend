@@ -19,16 +19,6 @@ const EditableFormRow = Form.create()(EditableRow);
 class EditableCell extends React.Component {
   getInput = () => {
     switch (this.props.inputType) {
-      case 'ranking':
-        return (
-          <Select placeholder="Chọn xếp hạng">
-            <Select.Option value="A">A</Select.Option>
-            <Select.Option value="B">B</Select.Option>
-            <Select.Option value="C">C</Select.Option>
-            <Select.Option value="D">D</Select.Option>
-          </Select>
-        );
-        break;
       default:
         return <Input />;
         break;
@@ -201,7 +191,8 @@ class EditableTable extends React.Component {
           } else {
             //udate table state
             newData.splice(index, 1, {
-              ...newItemData
+              ...newItemData,
+              ...json.data
             });
             this.setState({ data: newData, editingKey: '' });
             message.success(json.message);
@@ -323,7 +314,7 @@ class EditableTable extends React.Component {
               <div className="action-btns">
                 <Button 
                   onClick={() => this.addNewRow()}
-                  type="primary" icon="plus">Thêm mới</Button>
+                  type="primary" icon="plus">Thêm kho mới</Button>
               </div>
             </Col>
           </Row>

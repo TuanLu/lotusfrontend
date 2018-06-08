@@ -19,16 +19,6 @@ const EditableFormRow = Form.create()(EditableRow);
 class EditableCell extends React.Component {
   getInput = () => {
     switch (this.props.inputType) {
-      case 'ranking':
-        return (
-          <Select placeholder="Chọn xếp hạng">
-            <Select.Option value="A">A</Select.Option>
-            <Select.Option value="B">B</Select.Option>
-            <Select.Option value="C">C</Select.Option>
-            <Select.Option value="D">D</Select.Option>
-          </Select>
-        );
-        break;
       default:
         return <Input />;
         break;
