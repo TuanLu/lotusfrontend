@@ -7,7 +7,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 module.exports = merge(common, {
   entry: {
-    lotusimport: ['./app/app.production.jsx']
+    lotus: ['./app/app.production.jsx']
   },
   mode: 'production',
   plugins: [
