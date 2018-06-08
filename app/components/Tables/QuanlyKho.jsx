@@ -97,7 +97,7 @@ class EditableTable extends React.Component {
         render: (text, record) => {
           const editable = this.isEditing(record);
           return (
-            <div>
+            <div style={{minWidth: 100}}>
               {editable ? (
                 <span>
                   <EditableContext.Consumer>

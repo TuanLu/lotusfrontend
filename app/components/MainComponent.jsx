@@ -17,7 +17,7 @@ import QuanlyKh from './Tables/QuanlyKh'
 
 class MainComponent extends React.Component {
   state = {
-    collapsed: false,
+    collapsed: true,
     logged: false
   };
   toggle = () => {
