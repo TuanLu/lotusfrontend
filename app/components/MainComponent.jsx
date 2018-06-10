@@ -14,6 +14,7 @@ import Loading from './Loading'
 import QuanlyKho from './Tables/QuanlyKho'
 import QuanlyCat from './Tables/QuanlyCate'
 import QuanlyKh from './Tables/QuanlyKh'
+import QuanlySanpham from './Tables/QuanlySanpham'
 
 class MainComponent extends React.Component {
   state = {
@@ -68,19 +69,22 @@ class MainComponent extends React.Component {
     }
   }
   renderContent(router) {
-    let {dispatch} = this.props;
+    let {dispatch, mainState} = this.props;
     switch (router) {
       case 'npp':
-        return <QuanlyNPP dispatch={dispatch} mainState={this.props.mainState}/>
+        return <QuanlyNPP dispatch={dispatch} mainState={mainState}/>
         break;
       case 'qluser':
-        return <UserManagement dispatch={dispatch} mainState={this.props.mainState}/>
+        return <UserManagement dispatch={dispatch} mainState={mainState}/>
         break;
       case 'qlkho':
         return <QuanlyKho dispatch={dispatch}/>
         break;
       case 'qlcate':
         return <QuanlyCat dispatch={dispatch}/>
+        break;
+      case 'product':
+        return <QuanlySanpham dispatch={dispatch} mainState={mainState}/>
         break;
       case 'qlkh':
         return <QuanlyKh dispatch={dispatch}/>

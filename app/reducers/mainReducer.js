@@ -5,7 +5,8 @@ import {cloneDeep} from 'lodash'
 let _designDefault = {
     showLogin: true,
     defaultRouter: '',
-    userRoles: []
+    userRoles: [],
+    categories: []
   },
   cloneState;
 
