@@ -18,7 +18,8 @@ import QuanlyKh from './Tables/QuanlyKh'
 class MainComponent extends React.Component {
   state = {
     collapsed: true,
-    logged: false
+    logged: false,
+    loading: true
   };
   toggle = () => {
     this.setState({
@@ -45,10 +46,20 @@ class MainComponent extends React.Component {
           } else if(json.status == "error") {
             message.error(json.message, 3);
           }
+          this.setState({
+            loading: false
+          })
         })
         .catch((error) => {
           console.warn(error);
+          this.setState({
+            loading: false
+          })
         });
+      } else {
+        this.setState({
+          loading: false
+        })
       }
     } else {
       this.props.dispatch(updateStateData({
@@ -79,6 +90,9 @@ class MainComponent extends React.Component {
     }
   }
   render() {
+    if(this.state.loading) {
+      return <Loading/>
+    }
     let {showLogin} = this.props.mainState; 
     if(showLogin) return  <LoginForm dispatch={this.props.dispatch}/>;
     let {defaultRouter} = this.props.mainState;
