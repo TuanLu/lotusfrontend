@@ -121,13 +121,6 @@ class EditableTable extends React.Component {
         required: true
       },
       {
-        title: 'Đơn giá',
-        dataIndex: 'price',
-        //width: '40%',
-        editable: true,
-        required: true
-      },
-      {
         title: 'Đơn vị',
         dataIndex: 'unit',
         //width: '40%',
@@ -205,11 +198,12 @@ class EditableTable extends React.Component {
   }
   getDefaultFields() {
     return {
-      ma_npp: "",
+      product_id: "",
+      category_id: "",
       name: "",
-      address: "",
-      phone: "",
-      ranking: "A",
+      unit: "",
+      min: "",
+      max: "",
     };
   }
   isEditing = (record) => {
