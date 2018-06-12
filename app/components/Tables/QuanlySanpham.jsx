@@ -202,8 +202,8 @@ class EditableTable extends React.Component {
       category_id: "",
       name: "",
       unit: "",
-      min: "",
-      max: "",
+      min: "0",
+      max: "0",
     };
   }
   isEditing = (record) => {
